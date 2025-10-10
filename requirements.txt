@@ -1,0 +1,8 @@
+Flask
+Gunicorn
+mysql-connector-python
+pytz
+Flask-Cors
+pusher
+
+
