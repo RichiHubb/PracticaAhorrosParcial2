@@ -40,3 +40,28 @@ def guardarNotaFinanciera():
         con.commit()
     trigger_pusher("canalNotasFinancieras", "eventoNotasFinancieras", "Nota financiera actualizada")
     return jsonify({})
+
+@notas_financieras_bp.route("/notafinanciera/<int:idNota>", methods=["POST"])
+def actualizarNotaFinanciera(idNota):
+    titulo = request.form.get("titulo")
+    descripcion = request.form.get("descripcion")
+    with get_db_connection() as con:
+        cursor = con.cursor()
+        sql = "UPDATE notasfinancieras SET titulo=%s, descripcion=%s WHERE idNota=%s"
+        cursor.execute(sql, (titulo, descripcion, idNota))
+        con.commit()
+    trigger_pusher("canalNotasFinancieras", "eventoNotasFinancieras", "Nota financiera actualizada")
+    return jsonify({"success": True})
+
+
+@notas_financieras_bp.route("/notafinanciera/<int:idNota>", methods=["DELETE"])
+def eliminarNotaFinanciera(idNota):
+    with get_db_connection() as con:
+        cursor = con.cursor()
+        sql = "DELETE FROM notasfinancieras WHERE idNota=%s"
+        cursor.execute(sql, (idNota,))
+        con.commit()
+    trigger_pusher("canalNotasFinancieras", "eventoNotasFinancieras", "Nota financiera eliminada")
+    return jsonify({"success": True})
+
+
