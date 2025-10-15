@@ -296,13 +296,13 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
         $("#txtDesc").val(descripcion)
 
         // Cambiar comportamiento del botón Guardar
-        $("#frmCuenta").off("submit").submit(function(e) {
+        $("#frmNotaFinanciera").off("submit").submit(function(e) {
             e.preventDefault()
             $.post(`/notafinanciera/${id}`, {
                 titulo: $("#txtTitulo").val(),
                 descripcion: $("#txtDesc").val()
             }, function() {
-                $("#frmCuenta")[0].reset()
+                $("#frmNotaFinanciera")[0].reset()
                 buscarNotasFinancieras()
                 restaurarInsertar()
             })
@@ -322,6 +322,20 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
             }
         })
     })
+
+        function restaurarInsertar() {
+        $("#frmNotaFinanciera").off("submit").submit(function(e) {
+            e.preventDefault()
+            $.post("/notafinanciera", {
+                titulo: $("#txtTitulo").val(),
+                descripcion: $("#txtDesc").val()
+            }, function() {
+                $("#frmNotaFinanciera")[0].reset()
+                buscarNotasFinancieras()
+            })
+        })
+    }
+
 });
 
 app.controller("movimientosetiquetasCtrl", function ($scope, $http) {
@@ -500,6 +514,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
