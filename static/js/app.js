@@ -284,6 +284,44 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
             descripcion: $("#txtDesc").val(),
         })
     });
+
+     // UPDATE
+    $(document).on("click", ".btnEditar", function() {
+        const fila = $(this).closest("tr")
+        const id = fila.data("id")
+        const titulo = fila.find("td:eq(1)").text()
+        const descripcion = fila.find("td:eq(2)").text()
+
+        $("#txtTitulo").val(titulo)
+        $("#txtDesc").val(descripcion)
+
+        // Cambiar comportamiento del botón Guardar
+        $("#frmCuenta").off("submit").submit(function(e) {
+            e.preventDefault()
+            $.post(`/notafinanciera/${id}`, {
+                titulo: $("#txtTitulo").val(),
+                descripcion: $("#txtDesc").val()
+            }, function() {
+                $("#frmCuenta")[0].reset()
+                buscarNotasFinancieras()
+                restaurarInsertar()
+            })
+        })
+    })
+
+    // DELETE
+    $(document).on("click", ".btnEliminar", function() {
+        if (!confirm("¿Seguro que deseas eliminar esta nota?")) return
+
+        const id = $(this).closest("tr").data("id")
+        $.ajax({
+            url: `/notafinanciera/${id}`,
+            type: "DELETE",
+            success: function() {
+                buscarNotasFinancieras()
+            }
+        })
+    })
 });
 
 app.controller("movimientosetiquetasCtrl", function ($scope, $http) {
@@ -462,6 +500,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
