@@ -285,41 +285,38 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
         })
     });
 
-        // EDITAR
-    $(document).on("click", ".btnEditar", function() {
-        const fila = $(this).closest("tr")
-        const id = fila.data("id")
-        const titulo = fila.find("td:eq(1)").text()
-        const descripcion = fila.find("td:eq(2)").text()
-    
-        // Cargar datos en el formulario
-        $("#txtTitulo").val(titulo)
-        $("#txtDesc").val(descripcion)
-    
-        // Cambiar texto del botón (opcional)
-        $("#btnGuardar").text("Actualizar nota")
-    
-        // Quitar cualquier submit anterior
-        $("#frmNotaFinanciera").off("submit")
-    
-        // Asignar nuevo comportamiento para ACTUALIZAR
-        $("#frmNotaFinanciera").on("submit", function(e) {
-            e.preventDefault()
-    
-            $.post(`/notafinanciera/${id}`, {
+        // UPDATE (Editar nota existente)
+$(document).on("click", ".btnEditar", function() {
+    const fila = $(this).closest("tr")
+    const id = fila.data("id")
+    const titulo = fila.find("td:eq(1)").text()
+    const descripcion = fila.find("td:eq(2)").text()
+
+    // Rellenar los campos del formulario con los datos existentes
+    $("#txtTitulo").val(titulo)
+    $("#txtDesc").val(descripcion)
+
+    // Cambiar el evento del formulario para actualizar en lugar de insertar
+    $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
+        e.preventDefault()
+
+        // 🔽 AQUÍ está el bloque que mencionas 🔽
+        $.ajax({
+            url: `/notafinanciera/${id}`,
+            type: "POST", // o "PUT" si cambias el backend
+            data: {
                 titulo: $("#txtTitulo").val(),
                 descripcion: $("#txtDesc").val()
-            }, function() {
-                // Resetear formulario y recargar tabla
+            },
+            success: function() {
                 $("#frmNotaFinanciera")[0].reset()
-                $("#btnGuardar").text("Agregar nota")
                 buscarNotasFinancieras()
-    
-                // Restaurar el submit original de INSERTAR
-                restaurarInsertar()
-            })
+                restaurarInsertar() // restaurar el modo “insertar”
+            }
         })
     })
+})
+
 
 
     // DELETE
@@ -514,6 +511,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
