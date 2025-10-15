@@ -1,16 +1,16 @@
 {% for nota in notas %}
-<tr>
-    <td>{{ nota.idNota }}</td>
-    <td>{{ nota.titulo }}</td>
-    <td>{{ nota.descripcion }}</td>
-    <td>{{ nota.fechaCreacion }}</td>
-    <td>
-        <button class="btn btn-warning btn-sm btnEditar">Editar</button>
-        <button class="btn btn-danger btn-sm btnEliminar">Eliminar</button>
-    </td>
-</tr>
-
+    <tr data-id="{{ nota.idNota }}">
+        <td>{{ nota.idNota }}</td>
+        <td>{{ nota.titulo }}</td>
+        <td>{{ nota.descripcion }}</td>
+        <td>{{ nota.fechaCreacion }}</td>
+        <td>
+            <button class="btn btn-warning btn-sm btnEditar">Editar</button>
+            <button class="btn btn-danger btn-sm btnEliminar">Eliminar</button>
+        </td>
+    </tr>
 {% endfor %}
+
 
 
 
