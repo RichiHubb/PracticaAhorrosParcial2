@@ -285,46 +285,46 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
         })
     });
 
-     // UPDATE
+        // EDITAR
     $(document).on("click", ".btnEditar", function() {
         const fila = $(this).closest("tr")
         const id = fila.data("id")
         const titulo = fila.find("td:eq(1)").text()
         const descripcion = fila.find("td:eq(2)").text()
-
+    
+        // Cargar datos en el formulario
         $("#txtTitulo").val(titulo)
         $("#txtDesc").val(descripcion)
-
-        // Cambiar comportamiento del botón Guardar
-        $("#frmNotaFinanciera").off("submit").submit(function(e) {
+    
+        // Cambiar texto del botón (opcional)
+        $("#btnGuardar").text("Actualizar nota")
+    
+        // Quitar cualquier submit anterior
+        $("#frmNotaFinanciera").off("submit")
+    
+        // Asignar nuevo comportamiento para ACTUALIZAR
+        $("#frmNotaFinanciera").on("submit", function(e) {
             e.preventDefault()
+    
             $.post(`/notafinanciera/${id}`, {
                 titulo: $("#txtTitulo").val(),
                 descripcion: $("#txtDesc").val()
             }, function() {
+                // Resetear formulario y recargar tabla
                 $("#frmNotaFinanciera")[0].reset()
+                $("#btnGuardar").text("Agregar nota")
                 buscarNotasFinancieras()
+    
+                // Restaurar el submit original de INSERTAR
                 restaurarInsertar()
             })
         })
     })
 
+
     // DELETE
-    $(document).on("click", ".btnEliminar", function() {
-        if (!confirm("¿Seguro que deseas eliminar esta nota?")) return
-
-        const id = $(this).closest("tr").data("id")
-        $.ajax({
-            url: `/notafinanciera/${id}`,
-            type: "DELETE",
-            success: function() {
-                buscarNotasFinancieras()
-            }
-        })
-    })
-
-        function restaurarInsertar() {
-        $("#frmNotaFinanciera").off("submit").submit(function(e) {
+    function restaurarInsertar() {
+        $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
             e.preventDefault()
             $.post("/notafinanciera", {
                 titulo: $("#txtTitulo").val(),
@@ -514,6 +514,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
