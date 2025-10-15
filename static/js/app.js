@@ -365,21 +365,69 @@ app.controller("movimientosetiquetasCtrl", function ($scope, $http) {
 
     buscarMovimientosEtiquetas();
 
+    // Pusher
     var pusher = new Pusher("bc1c723155afce8dd187", { cluster: "us2" });
     var channel = pusher.subscribe("canalMovimientosEtiquetas");
     channel.bind("eventoMovimientosEtiquetas", function () {
         buscarMovimientosEtiquetas();
     });
 
+    // Guardar o actualizar
     $(document).on("submit", "#frmMovimientoEtiqueta", function (event) {
         event.preventDefault();
+
+        const idMovimientoEtiqueta = $("#txtIDMovimientoEtiqueta").val();
+        const idMovimiento = $("#txtMovimientoId").val();
+        const idEtiqueta = $("#txtEtiquetaId").val();
+
         $.post("/movimientoetiqueta", {
-            idMovimientoEtiqueta: $("#txtIDMovimientoEtiqueta").val(),
-            idMovimiento: $("#txtIDMovimiento").val(),
-            idEtiqueta: $("#txtIDEtiqueta").val()
+            idMovimientoEtiqueta: idMovimientoEtiqueta,
+            idMovimiento: idMovimiento,
+            idEtiqueta: idEtiqueta
+        }, function () {
+            // Limpia formulario y recarga lista
+            $("#frmMovimientoEtiqueta")[0].reset();
+            $("#txtIDMovimientoEtiqueta").val("");
+            buscarMovimientosEtiquetas();
         });
     });
+
+    // Editar registro
+    $(document).on("click", ".btnEditar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimientoEtiqueta = fila.find("td:eq(0)").text().trim();
+        const idMovimiento = fila.find("td:eq(1)").text().trim();
+        const idEtiqueta = fila.find("td:eq(2)").text().trim();
+
+        // Cargar en el formulario
+        $("#txtIDMovimientoEtiqueta").val(idMovimientoEtiqueta);
+        $("#txtMovimientoId").val(idMovimiento);
+        $("#txtEtiquetaId").val(idEtiqueta);
+
+        alert("Modo edición activado para el ID: " + idMovimientoEtiqueta);
+    });
+
+    // Eliminar registro
+    $(document).on("click", ".btnEliminar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimientoEtiqueta = fila.find("td:eq(0)").text().trim();
+
+        if (confirm("¿Seguro que deseas eliminar el registro #" + idMovimientoEtiqueta + "?")) {
+            $.ajax({
+                url: "/eliminarMovimientoEtiqueta",
+                method: "POST",
+                data: { idMovimientoEtiqueta: idMovimientoEtiqueta },
+                success: function () {
+                    buscarMovimientosEtiquetas();
+                },
+                error: function () {
+                    alert("Error al eliminar el registro");
+                }
+            });
+        }
+    });
 });
+
 
 app.controller("cuentasCtrl", function ($scope, $http) {
     function buscarCuentas() {
@@ -532,6 +580,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
