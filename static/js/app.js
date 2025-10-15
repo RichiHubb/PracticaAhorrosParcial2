@@ -300,19 +300,7 @@ $(document).on("click", ".btnEditar", function() {
     $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
         e.preventDefault()
 
-        // 🔽 AQUÍ está el bloque que mencionas 🔽
-        $.ajax({
-            url: `/notafinanciera/${id}`,
-            type: "POST", // o "PUT" si cambias el backend
-            data: {
-                titulo: $("#txtTitulo").val(),
-                descripcion: $("#txtDesc").val()
-            },
-            success: function() {
-                $("#frmNotaFinanciera")[0].reset()
-                buscarNotasFinancieras()
-                restaurarInsertar() // restaurar el modo “insertar”
-            }
+       $.post(/notafinanciera/${id}, { titulo: $("#txtTitulo").val(), descripcion: $("#txtDesc").val() }, function() { $("#frmNotaFinanciera")[0].reset() buscarNotasFinancieras() restaurarInsertar() })
         })
     })
 })
@@ -511,6 +499,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
