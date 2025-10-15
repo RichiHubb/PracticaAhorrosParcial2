@@ -275,10 +275,18 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
     channel.bind("eventoNotasFinancieras", function(data) {
         buscarNotasFinancieras()
     });
-    
- 
 
-      
+     $(document).on("submit", "#frmNotaFinanciera", function (event) {
+        btnInsertar.event.preventDefault()
+        const btnInsertar = document.getElementById('btnInsertar');
+        const btnModificar = document.getElementById('btnModificar');
+        $.post("/notafinanciera", {
+            idNota: "",
+            titulo: $("#txtTitulo").val(),
+            descripcion: $("#txtDesc").val(),
+        })
+    });
+
 // UPDATE (Editar nota existente)
     $(document).on("click", ".btnEditar", function() {
         const fila = $(this).closest("tr");
@@ -295,7 +303,7 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
 
         // Reemplazar submit para que haga UPDATE en vez de INSERT
         $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
-            e.preventDefault();
+            btnModificar.preventDefault();
 
             // NOTA: usé $.ajax para especificar el tipo y evitar ambigüedades
             $.ajax({
@@ -524,6 +532,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
