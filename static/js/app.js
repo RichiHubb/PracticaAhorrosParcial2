@@ -276,14 +276,7 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
         buscarNotasFinancieras()
     });
     
-    $(document).on("submit", "#frmNotaFinanciera", function (event) {
-        event.preventDefault()
-        $.post("/notafinanciera", {
-            idNota: "",
-            titulo: $("#txtTitulo").val(),
-            descripcion: $("#txtDesc").val(),
-        })
-    });
+ 
 
       
 // UPDATE (Editar nota existente)
@@ -322,6 +315,15 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
                 }
             });
         });
+    });
+
+    $(document).on("submit", "#frmNotaFinanciera", function (event) {
+        event.preventDefault()
+        $.post("/notafinanciera", {
+            idNota: "",
+            titulo: $("#txtTitulo").val(),
+            descripcion: $("#txtDesc").val(),
+        })
     });
 
 
@@ -522,6 +524,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
