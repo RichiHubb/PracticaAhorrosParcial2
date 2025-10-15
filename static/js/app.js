@@ -285,25 +285,44 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
         })
     });
 
-        // UPDATE (Editar nota existente)
-$(document).on("click", ".btnEditar", function() {
-    const fila = $(this).closest("tr")
-    const id = fila.data("id")
-    const titulo = fila.find("td:eq(1)").text()
-    const descripcion = fila.find("td:eq(2)").text()
+      
+// UPDATE (Editar nota existente)
+    $(document).on("click", ".btnEditar", function() {
+        const fila = $(this).closest("tr");
+        const id = fila.data("id");
+        const titulo = fila.find("td:eq(1)").text();
+        const descripcion = fila.find("td:eq(2)").text();
 
-    // Rellenar los campos del formulario con los datos existentes
-    $("#txtTitulo").val(titulo)
-    $("#txtDesc").val(descripcion)
+        // Rellenar los campos del formulario con los datos existentes
+        $("#txtTitulo").val(titulo);
+        $("#txtDesc").val(descripcion);
 
-    // Cambiar el evento del formulario para actualizar en lugar de insertar
-    $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
-        e.preventDefault()
+        // Cambiar texto del botón (opcional)
+        $("#btnGuardar").text && $("#btnGuardar").text("Actualizar nota");
 
-       $.post(/notafinanciera/${id}, { titulo: $("#txtTitulo").val(), descripcion: $("#txtDesc").val() }, function() { $("#frmNotaFinanciera")[0].reset() buscarNotasFinancieras() restaurarInsertar() })
-        })
-    })
-})
+        // Reemplazar submit para que haga UPDATE en vez de INSERT
+        $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
+            e.preventDefault();
+
+            // NOTA: usé $.ajax para especificar el tipo y evitar ambigüedades
+            $.ajax({
+                url: `/notafinanciera/${id}`, // <-- template literal correcto
+                type: "POST",                 // tu backend espera POST para /notafinanciera/<id>
+                data: {
+                    titulo: $("#txtTitulo").val(),
+                    descripcion: $("#txtDesc").val()
+                },
+                success: function() {
+                    $("#frmNotaFinanciera")[0].reset();
+                    buscarNotasFinancieras();
+                    restaurarInsertar(); // volver a modo insertar
+                },
+                error: function(xhr, status, err) {
+                    console.error("Error al actualizar:", status, err);
+                }
+            });
+        });
+    });
 
 
 
@@ -499,6 +518,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
