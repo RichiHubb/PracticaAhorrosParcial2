@@ -277,9 +277,7 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
     });
 
      $(document).on("submit", "#frmNotaFinanciera", function (event) {
-        btnInsertar.event.preventDefault()
-        const btnInsertar = document.getElementById('btnInsertar');
-        const btnModificar = document.getElementById('btnModificar');
+        event.preventDefault()
         $.post("/notafinanciera", {
             idNota: "",
             titulo: $("#txtTitulo").val(),
@@ -303,7 +301,7 @@ app.controller("notasfinancierasCtrl", function ($scope, $http) {
 
         // Reemplazar submit para que haga UPDATE en vez de INSERT
         $("#frmNotaFinanciera").off("submit").on("submit", function(e) {
-            btnModificar.preventDefault();
+            e.preventDefault();
 
             // NOTA: usé $.ajax para especificar el tipo y evitar ambigüedades
             $.ajax({
@@ -580,6 +578,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
