@@ -210,12 +210,14 @@ app.controller("movimientosCtrl", function ($scope, $http) {
 
     buscarMovimientos();
 
+    // Pusher
     var pusher = new Pusher("bc1c723155afce8dd187", { cluster: "us2" });
     var channel = pusher.subscribe("canalMovimientos");
     channel.bind("eventoMovimientos", function () {
         buscarMovimientos();
     });
 
+    // Guardar o actualizar
     $(document).on("submit", "#frmMovimiento", function (event) {
         event.preventDefault();
 
@@ -230,12 +232,14 @@ app.controller("movimientosCtrl", function ($scope, $http) {
             concepto: concepto,
             monto: monto
         }, function () {
+            // Limpia formulario y recarga lista
             $("#frmMovimiento")[0].reset();
             $("#txtIDMovimiento").val("");
             buscarMovimientos();
         });
     });
 
+    // Editar registro
     $(document).on("click", ".btnEditar", function () {
         const fila = $(this).closest("tr");
         const idMovimiento = fila.find("td:eq(0)").text().trim();
@@ -243,6 +247,7 @@ app.controller("movimientosCtrl", function ($scope, $http) {
         const concepto = fila.find("td:eq(2)").text().trim();
         const monto = fila.find("td:eq(3)").text().trim();
 
+        // Cargar en el formulario
         $("#txtIDMovimiento").val(idMovimiento);
         $("#txtFecha").val(fecha);
         $("#txtConcepto").val(concepto);
@@ -251,6 +256,7 @@ app.controller("movimientosCtrl", function ($scope, $http) {
         alert("Modo edición activado para el ID: " + idMovimiento);
     });
 
+    // Eliminar registro
     $(document).on("click", ".btnEliminar", function () {
         const fila = $(this).closest("tr");
         const idMovimiento = fila.find("td:eq(0)").text().trim();
@@ -624,6 +630,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
