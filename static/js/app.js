@@ -454,7 +454,7 @@ app.controller("movimientosetiquetasCtrl", function ($scope, $http) {
         $("#txtMovimientoId").val(idMovimiento);
         $("#txtEtiquetaId").val(idEtiqueta);
 
-        alert("Modo edición activado para el ID: " + idMovimientoEtiqueta);
+        alert("Quieres editar el ID: " + idMovimientoEtiqueta);
     });
 
     // Eliminar registro
@@ -462,7 +462,7 @@ app.controller("movimientosetiquetasCtrl", function ($scope, $http) {
         const fila = $(this).closest("tr");
         const idMovimientoEtiqueta = fila.find("td:eq(0)").text().trim();
 
-        if (confirm("¿Seguro que deseas eliminar el registro #" + idMovimientoEtiqueta + "?")) {
+        if (confirm("¿Seguro que deseas eliminar el registro " + idMovimientoEtiqueta + "?")) {
             $.ajax({
                 url: "/eliminarMovimientoEtiqueta",
                 method: "POST",
@@ -630,6 +630,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
