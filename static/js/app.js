@@ -199,32 +199,78 @@ app.controller("productosCtrl", function ($scope, $http) {
 })
 
 
+
+
 app.controller("movimientosCtrl", function ($scope, $http) {
     function buscarMovimientos() {
         $.get("/tbodyMovimientos", function (trsHTML) {
-            $("#tbodyMovimientos").html(trsHTML)
-        })
+            $("#tbodyMovimientos").html(trsHTML);
+        });
     }
 
-    buscarMovimientos()
+    buscarMovimientos();
 
-    Pusher.logToConsole = true
-    var pusher = new Pusher('bc1c723155afce8dd187', { cluster: 'us2' })
-    var channel = pusher.subscribe("canalMovimientos")
-    channel.bind("eventoMovimientos", function(data) {
-        buscarMovimientos()
-    })
+    var pusher = new Pusher("bc1c723155afce8dd187", { cluster: "us2" });
+    var channel = pusher.subscribe("canalMovimientos");
+    channel.bind("eventoMovimientos", function () {
+        buscarMovimientos();
+    });
 
     $(document).on("submit", "#frmMovimiento", function (event) {
-        event.preventDefault()
+        event.preventDefault();
+
+        const idMovimiento = $("#txtIDMovimiento").val();
+        const fecha = $("#txtFecha").val();
+        const concepto = $("#txtConcepto").val();
+        const monto = $("#txtMonto").val();
+
         $.post("/movimiento", {
-            id: "",
-            descripcion: $("#txtDescripcion").val(),
-            monto: $("#txtMonto").val(),
-            fecha: $("#txtFecha").val()
-        })
-    })
-})
+            idMovimiento: idMovimiento,
+            fecha: fecha,
+            concepto: concepto,
+            monto: monto
+        }, function () {
+            $("#frmMovimiento")[0].reset();
+            $("#txtIDMovimiento").val("");
+            buscarMovimientos();
+        });
+    });
+
+    $(document).on("click", ".btnEditar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimiento = fila.find("td:eq(0)").text().trim();
+        const fecha = fila.find("td:eq(1)").text().trim();
+        const concepto = fila.find("td:eq(2)").text().trim();
+        const monto = fila.find("td:eq(3)").text().trim();
+
+        $("#txtIDMovimiento").val(idMovimiento);
+        $("#txtFecha").val(fecha);
+        $("#txtConcepto").val(concepto);
+        $("#txtMonto").val(monto);
+
+        alert("Modo edición activado para el ID: " + idMovimiento);
+    });
+
+    $(document).on("click", ".btnEliminar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimiento = fila.find("td:eq(0)").text().trim();
+
+        if (confirm("¿Seguro que deseas eliminar el registro #" + idMovimiento + "?")) {
+            $.ajax({
+                url: "/eliminarMovimiento",
+                method: "POST",
+                data: { idMovimiento: idMovimiento },
+                success: function () {
+                    buscarMovimientos();
+                },
+                error: function () {
+                    alert("Error al eliminar el registro");
+                }
+            });
+        }
+    });
+});
+
 
 
 app.controller("decoracionesCtrl", function ($scope, $http) {
@@ -578,6 +624,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
