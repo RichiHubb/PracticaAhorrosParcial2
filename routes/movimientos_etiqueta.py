@@ -50,7 +50,7 @@ def guardarMovimientoEtiqueta():
 
         con.commit()
 
-    # 🔔 Notificar al frontend que hubo cambios
+    #Notificar al frontend que hubo cambios
     trigger_pusher("canalMovimientosEtiquetas", "eventoMovimientosEtiquetas", "Movimiento etiqueta actualizado")
 
     return jsonify({"status": "ok"})
@@ -70,7 +70,8 @@ def eliminarMovimientoEtiqueta():
         cursor.execute(sql, (idMovimientoEtiqueta,))
         con.commit()
 
-    # 🔔 Notificar actualización
+    # Notificar actualización
     trigger_pusher("canalMovimientosEtiquetas", "eventoMovimientosEtiquetas", "Movimiento etiqueta eliminado")
 
     return jsonify({"status": "eliminado"})
+
