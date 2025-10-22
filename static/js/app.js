@@ -204,29 +204,71 @@ app.controller("productosCtrl", function ($scope, $http) {
 app.controller("movimientosCtrl", function ($scope, $http) {
     function buscarMovimientos() {
         $.get("/tbodyMovimientos", function (trsHTML) {
-            $("#tbodyMovimientos").html(trsHTML)
-        })
+            $("#tbodyMovimientos").html(trsHTML);
+        });
     }
 
-    buscarMovimientos()
+    buscarMovimientos();
 
-    Pusher.logToConsole = true
-    var pusher = new Pusher('bc1c723155afce8dd187', { cluster: 'us2' })
-    var channel = pusher.subscribe("canalMovimientos")
-    channel.bind("eventoMovimientos", function(data) {
-        buscarMovimientos()
-    })
+    // Pusher para actualizar tabla en tiempo real
+    var pusher = new Pusher("bc1c723155afce8dd187", { cluster: "us2" });
+    var channel = pusher.subscribe("canalMovimientos");
+    channel.bind("eventoMovimientos", function () {
+        buscarMovimientos();
+    });
 
+    // Guardar o actualizar movimiento
     $(document).on("submit", "#frmMovimiento", function (event) {
-        event.preventDefault()
+        event.preventDefault();
+
+        const idMovimiento = $("#txtIDMovimiento").val();
+        const monto = $("#txtMonto").val();
+
         $.post("/movimiento", {
-            id: "",
-            descripcion: $("#txtDescripcion").val(),
-            monto: $("#txtMonto").val(),
-            fecha: $("#txtFecha").val()
-        })
-    })
-})
+            idMovimiento: idMovimiento,
+            monto: monto
+        }, function () {
+            // Limpiar formulario y recargar tabla
+            $("#frmMovimiento")[0].reset();
+            $("#txtIDMovimiento").val("");
+            buscarMovimientos();
+        });
+    });
+
+    // Editar registro
+    $(document).on("click", ".btnEditar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimiento = fila.find("td:eq(0)").text().trim();
+        const monto = fila.find("td:eq(1)").text().trim();
+
+        // Cargar datos en formulario
+        $("#txtIDMovimiento").val(idMovimiento);
+        $("#txtMonto").val(monto);
+
+        alert("Editando movimiento con ID: " + idMovimiento);
+    });
+
+    // Eliminar registro
+    $(document).on("click", ".btnEliminar", function () {
+        const fila = $(this).closest("tr");
+        const idMovimiento = fila.find("td:eq(0)").text().trim();
+
+        if (confirm("¿Seguro que deseas eliminar el movimiento " + idMovimiento + "?")) {
+            $.ajax({
+                url: "/eliminarMovimiento",
+                method: "POST",
+                data: { idMovimiento: idMovimiento },
+                success: function () {
+                    buscarMovimientos();
+                },
+                error: function () {
+                    alert("Error al eliminar el registro");
+                }
+            });
+        }
+    });
+});
+
 
 
 
@@ -581,6 +623,7 @@ function modal(contentHtml, title, buttons) {
 function closeModal() {
     $('#modal-message').modal('hide')
 }
+
 
 
 
