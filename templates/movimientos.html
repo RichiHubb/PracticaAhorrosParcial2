@@ -1,24 +1,20 @@
 <div class="row align-items-start py-lg-2 py-3">
+    <!-- Left: form (40%) -->
     <div class="col-md-4">
         <div class="card mb-3 text-dark shadow-sm">
             <div class="card-body bg-white text-dark">
                 <form id="frmMovimiento" method="post">
-                    <input type="hidden" id="txtIDMovimiento" name="idMovimiento" />
-
                     <div class="mb-3">
-                        <input class="form-control mb-2 border-light fs-1" 
-                               type="text" id="txtFecha" name="fecha"
-                               placeholder="Fecha" />
+                        <input class="form-control mb-2 border-light fs-1" type="text" id="txtFecha" name="txtFecha"
+                            placeholder="Fecha" />
                     </div>
                     <div class="mb-3">
-                        <input class="form-control mb-2 border-light fs-1" 
-                               type="text" id="txtConcepto" name="concepto" 
-                               placeholder="Concepto" />
+                        <input class="form-control mb-2 border-light fs-1" type="text" id="txtConcepto"
+                            name="txtConcepto" placeholder="Concepto" />
                     </div>
                     <div class="mb-3">
-                        <input class="form-control mb-2 border-light fs-1" 
-                               type="text" id="txtMonto" name="monto"
-                               placeholder="Monto" />
+                        <input class="form-control mb-2 border-light fs-1" type="text" id="txtMonto" name="txtMonto"
+                            placeholder="Monto" />
                     </div>
                     <div class="d-flex justify-content-center">
                         <button class="btn btn-success text-dark fs-1" type="submit">Guardar</button>
@@ -28,6 +24,7 @@
         </div>
     </div>
 
+    <!-- Right: table (60%) -->
     <div class="col-md-8">
         <div class="card">
             <div class="card-body bg-white text-dark">
@@ -39,7 +36,6 @@
                                 <th>Fecha</th>
                                 <th>Concepto</th>
                                 <th>Monto</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyMovimientos"></tbody>
