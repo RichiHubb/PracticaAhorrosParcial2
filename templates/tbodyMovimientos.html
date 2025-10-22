@@ -1,8 +1,11 @@
 {% for mov in movimientos %}
 <tr>
     <td>{{ mov.idMovimiento }}</td>
-    <td>{{ mov.fechaHora }}</td>
-    <td>{{ mov.concepto }}</td>
     <td>{{ mov.monto }}</td>
+    <td>{{ mov.fechaHora }}</td>
+    <td>
+        <button class="btn btn-sm btn-primary btnEditar">Editar</button>
+        <button class="btn btn-sm btn-danger btnEliminar">Eliminar</button>
+    </td>
 </tr>
 {% endfor %}
